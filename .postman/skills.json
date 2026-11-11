@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "origin": "bundled",
+  "source": "bundled",
+  "fetchedAt": "2026-11-02T13:39:27.188Z",
+  "skills": {
+    "api-builder": {
+      "files": {
+        "SKILL.md": {
+          "source": "f94d330bee0bdfa6ad8cc0c408811524b6802d4ffd000c49d0adfd55d6021386",
+          "written": "af0660d6f77fd854a5114e11ddbe1b1f83a4dc0d3dd76c0b9609740c8d45b63c"
+        },
+        "reference/collection_schema_v3.md": {
+          "source": "9d37d6869a27225ee234a0f8a9152a6603eacaec36e565e886bf67e15932a54b",
+          "written": "9d37d6869a27225ee234a0f8a9152a6603eacaec36e565e886bf67e15932a54b"
+        }
+      }
+    }
+  }
+}

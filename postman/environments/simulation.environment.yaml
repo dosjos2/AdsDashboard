@@ -1,0 +1,5 @@
+name: Local synthetic Azure DevOps
+values:
+  - {key: baseUrl, value: 'http://127.0.0.1:4010/azure', enabled: true, type: default}
+  - {key: identityUrl, value: 'http://127.0.0.1:4010/azure', enabled: true, type: default}
+  - {key: basicAuthPassword, value: test-token, enabled: true, type: default}

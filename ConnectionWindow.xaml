@@ -1,0 +1,17 @@
+<Window x:Class="DevOpsPulse.ConnectionWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+ Title="Koble til Azure DevOps" Width="540" Height="730" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" Style="{StaticResource {x:Type Window}}">
+ <Border Background="White" Padding="32"><StackPanel>
+  <TextBlock Text="Ditt arbeid. Din oversikt." FontSize="25" FontWeight="SemiBold"/>
+  <TextBlock Text="Koble Pulse til Azure DevOps med et lesetoken." Foreground="#8190A5" Margin="0,9,0,22"/>
+  <TextBlock Text="Organisasjon" FontWeight="SemiBold" Margin="0,0,0,7"/><TextBox x:Name="OrganizationBox" AutomationProperties.Name="Organisasjon"/>
+  <TextBlock Text="Bare navnet fra adressen, for eksempel helsedir" FontSize="11" Foreground="#8995A7" Margin="0,5,0,15"/>
+  <TextBlock Text="E-postadresse i DevOps" FontWeight="SemiBold" Margin="0,0,0,7"/><TextBox x:Name="EmailBox" AutomationProperties.Name="E-postadresse" Margin="0,0,0,17"/>
+  <TextBlock Text="Personal Access Token (PAT)" FontWeight="SemiBold" Margin="0,0,0,7"/>
+  <PasswordBox x:Name="TokenBox" Padding="10,9" BorderBrush="#DFE5EE" AutomationProperties.Name="Personal Access Token"/>
+  <CheckBox x:Name="RememberBox" Content="Husk token på denne Windows-brukeren" Margin="0,13,0,7"/>
+  <TextBlock Text="Lagres kryptert med Windows DPAPI. Uten avkrysning brukes tokenet bare mens appen er åpen." FontSize="11" Foreground="#8995A7" TextWrapping="Wrap" Margin="0,0,0,18"/>
+  <Border Background="#F3F5FC" CornerRadius="8" Padding="15"><StackPanel><TextBlock Text="Tilgang til Azure DevOps" FontWeight="SemiBold" FontSize="12"/><TextBlock Text="Read: Code · Build · Project and Team · Identity&#x0a;Work Items: Read for visning. Velg Read &amp; write for å kunne flytte oppgaver på boardet. Du trenger også redigeringstilgang til oppgavene." TextWrapping="Wrap" FontSize="11" Foreground="#77869D" Margin="0,7,0,9"/><Button Content="Opprett token i Azure DevOps ↗" Click="CreateToken" Padding="0" BorderThickness="0" Background="Transparent" Foreground="#5266E9" HorizontalAlignment="Left" FontSize="11"/></StackPanel></Border>
+  <TextBlock x:Name="ValidationText" Foreground="#BD4D61" FontSize="11" TextWrapping="Wrap" Margin="0,13,0,8" MinHeight="16"/>
+  <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><Button Content="Glem token" Click="ForgetClick" FontSize="11" Padding="12,10"/><StackPanel Grid.Column="2" Orientation="Horizontal"><Button Content="Avbryt" IsCancel="True" Margin="0,0,9,0"/><Button Content="Koble til →" Style="{StaticResource Primary}" Click="ConnectClick" IsDefault="True"/></StackPanel></Grid>
+ </StackPanel></Border>
+</Window>

@@ -1,0 +1,44 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/_apis/projects/:project/teams?api-version=7.1&$top=100&$skip=0"
+  method: GET
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+    - key: Accept
+      value: application/json
+  queryParams:
+    api-version: "7.1"
+    $top: "100"
+    $skip: "0"
+  pathVariables:
+    - key: project
+      value: string
+      disabled: false
+      description: "(Required) "
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "value": [
+          {
+            "key_0": 4915.442024357617,
+            "key_1": "string",
+            "key_2": true
+          },
+          {
+            "key_0": "string",
+            "key_1": 3070
+          }
+        ]
+      }
+order: 1000

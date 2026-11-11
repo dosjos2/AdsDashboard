@@ -1,0 +1,10 @@
+<Window x:Class="DevOpsPulse.NotificationsWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Varsler – DevOps Pulse" Width="760" Height="680" MinWidth="550" MinHeight="420" WindowStartupLocation="CenterOwner" Style="{StaticResource {x:Type Window}}">
+ <Grid Margin="26"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Margin="0,0,0,20"><TextBlock Text="Dine varsler" FontSize="25" FontWeight="SemiBold"/><TextBlock Text="Nye tildelinger og @omtaler i arbeidsoppgaver" Foreground="{StaticResource Muted}" Margin="0,8,0,0"/><TextBlock Text="{Binding Status}" Foreground="{StaticResource Muted}" TextWrapping="Wrap" FontSize="11" Margin="0,10,0,0"/></StackPanel>
+  <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"><StackPanel>
+   <TextBlock Text="Ingen varsler ennå. Nye hendelser etter tilkobling vises her." Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,25"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding Items.Count}" Value="0"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+   <ItemsControl ItemsSource="{Binding Items}"><ItemsControl.ItemTemplate><DataTemplate><Border Style="{StaticResource Card}" Margin="0,0,10,12"><StackPanel><Button Content="{Binding Title}" Click="OpenNotification" Background="Transparent" BorderThickness="0" Padding="0" HorizontalAlignment="Left" Foreground="{StaticResource Accent}"/><TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Margin="0,9,0,0"/><TextBlock Text="{Binding Timestamp}" Style="{StaticResource MutedText}" FontSize="10" Margin="0,9,0,0"/></StackPanel></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+  </StackPanel></ScrollViewer>
+  <CheckBox Grid.Row="2" Content="Vis skrivebordsvarsler mens appen er åpen" IsChecked="{Binding DesktopAlertsEnabled}" Margin="0,16,0,0"/>
+ </Grid>
+</Window>

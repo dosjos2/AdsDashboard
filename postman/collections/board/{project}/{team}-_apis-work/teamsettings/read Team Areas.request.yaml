@@ -1,0 +1,12 @@
+$kind: http-request
+name: "read Team Areas"
+order: 4000
+method: GET
+url: "{{baseUrl}}/Alpha/team-main/_apis/work/teamsettings/teamfieldvalues?api-version=7.1"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: 'application/json'}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Team area scope',()=>pm.expect(pm.response.json().values[0].includeChildren).to.equal(true));"

@@ -1,0 +1,43 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/:project/_apis/wit/workitems/:id?api-version=7.1"
+  method: PATCH
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+  queryParams:
+    api-version: "7.1"
+  pathVariables:
+    - key: project
+      value: string
+      disabled: false
+      description: "(Required) "
+    - key: id
+      value: "4483"
+      disabled: false
+      description: "(Required) "
+  body:
+    type: json
+    content: |-
+      [
+        {
+          "op": "add",
+          "path": "string",
+          "value": ""
+        },
+        {
+          "op": "add",
+          "path": "string",
+          "value": ""
+        }
+      ]
+response:
+  statusCode: 409
+  statusText: Conflict
+  headers:
+    Content-Type: text/plain
+  body:
+    type: text
+    content: ""
+order: 4000

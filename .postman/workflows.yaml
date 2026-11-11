@@ -1,0 +1,6 @@
+workflows:
+  syncSpecToCollection:
+    - spec: ../postman/specs/azure-devops.yaml
+      collection: ../postman/collections/azure-devops
+    - spec: ../postman/specs/board.yaml
+      collection: ../postman/collections/board

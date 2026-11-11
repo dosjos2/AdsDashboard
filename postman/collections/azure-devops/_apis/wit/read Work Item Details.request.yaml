@@ -1,0 +1,15 @@
+$kind: http-request
+name: "read Work Item Details"
+order: 5000
+method: POST
+url: "{{baseUrl}}/_apis/wit/workitemsbatch?api-version=7.1"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: application/json}
+body:
+  type: json
+  content: "{\"ids\": {{workIds}}, \"errorPolicy\": \"Omit\"}"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Work details have fields', () => pm.response.json().value.forEach(w => {pm.expect(w.id).to.be.a('number'); pm.expect(w.fields['System.State']).to.be.a('string');}));"

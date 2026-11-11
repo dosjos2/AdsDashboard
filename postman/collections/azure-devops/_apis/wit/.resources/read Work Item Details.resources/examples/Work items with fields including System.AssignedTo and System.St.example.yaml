@@ -1,0 +1,43 @@
+$kind: http-example
+name: Work items with fields including System.AssignedTo and System.State
+request:
+  url: "{{baseUrl}}/_apis/wit/workitemsbatch?api-version=7.1"
+  method: POST
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+    - key: Accept
+      value: application/json
+  queryParams:
+    api-version: "7.1"
+  body:
+    type: json
+    content: |-
+      {
+        "ids": [
+          2374,
+          3605
+        ],
+        "errorPolicy": "Omit"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "value": [
+          {
+            "key_0": "string"
+          },
+          {
+            "key_0": 1939
+          }
+        ],
+        "count": 5632
+      }
+order: 1000

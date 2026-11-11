@@ -1,0 +1,9 @@
+simulation: devops-dashboard
+routing: path
+mocks:
+  - name: Azure DevOps
+    routeKey: azure
+    origin:
+      - dev.azure.com
+      - vssps.dev.azure.com
+    path: postman/mocks/azure-devops

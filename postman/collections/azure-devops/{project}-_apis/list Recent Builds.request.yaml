@@ -1,0 +1,12 @@
+$kind: http-request
+name: "list Recent Builds"
+order: 7000
+method: GET
+url: "{{baseUrl}}/{{project}}/_apis/build/builds?api-version=7.1&queryOrder=queueTimeDescending&minTime={{buildSince}}&$top=100"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: application/json}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Builds have pipeline and status', () => pm.response.json().value.forEach(b => {pm.expect(b.definition.id).to.be.a('number'); pm.expect(b.status).to.be.a('string');}));"

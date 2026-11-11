@@ -1,0 +1,70 @@
+purpose:
+  stands_in_for: Azure DevOps REST 7.1 reads for identity, projects, work items, pull requests and builds.
+  unblocks: Local verification of the actual .NET desktop client without Helsedir credentials.
+assumptions:
+  - id: paginated-personal-data
+    status: supported
+    claim: The client follows project and build continuation tokens, chunks work details to at most 200 and follows PR skip/top pages under the modeled REST 7.1 responses.
+    reason: Actual client HTTP traffic and assertions establish the behavior within these synthetic scenarios.
+    verification: On 2026-11-02 the C# integration runner loaded two project pages, 201 item references, two PR pages, duplicate roles and two build pages. All corresponding assertions passed. Not a live provider check.
+    source: tests/Program.cs; postman/mocks/azure-devops/default.js; AzureDevOpsClient.cs; Microsoft REST 7.1 links in README.md.
+    updated_at: '2026-11-02'
+  - id: partial-failure-and-auth
+    status: supported
+    claim: In the tested cases the client preserves readable project data on 403 and fails the load on identity 401, ambiguous identity and HTML responses. A 429 with Retry-After 1 is retried successfully.
+    reason: Client outcomes match each injected failure and simulation traffic exercised the changed path.
+    verification: On 2026-11-02 the actual C# runner executed normal, auth, ambiguous, html and retry modes against the local simulation. Assertions for warnings, exceptions and recovered data passed.
+    source: tests/Program.cs; postman/mocks/azure-devops/default.js; AzureDevOpsClient.cs.
+    updated_at: '2026-11-02'
+  - id: helsedir-live-access
+    status: unknown
+    claim: The user's token and tenant policies permit the documented endpoints across Helsedir projects.
+    reason: No provider credential was supplied and no authenticated live request was made. Synthetic success cannot establish tenant access.
+    verification: Pending first connection through the app. Public Microsoft REST documentation was checked on 2026-11-02; it specifies the endpoints but does not establish organization policy or permissions.
+    source: README.md connection instructions; postman/specs/azure-devops.yaml; ConnectionWindow.xaml.
+    updated_at: '2026-11-02'
+  - id: native-work-item-details
+    status: supported
+    claim: The client maps optional work description, reproduction steps, acceptance criteria, assignee, area and tags from existing batch responses into native window data, treating HTML as plain text.
+    reason: Actual .NET client requests against the local simulation returned these synthetic fields and six detail assertions passed. This supports the modeled mapping, not live tenant field availability.
+    verification: On 2026-11-03 the C# integration runner passed 31 checks with one unrelated DPAPI skip. Postman collection assertions passed 18 of 18. WPF preview clicked the actual task button and verified correct independent task windows and empty-field handling. Live Helsedir fields remain unverified.
+    source: tests/Program.cs; WorkItemText.cs; WorkItemWindow.xaml; MainWindow.xaml.cs SavePreviews; postman/mocks/azure-devops/default.js; https://learn.microsoft.com/en-us/rest/api/azure/devops/wit/fields/list?view=azure-devops-rest-7.1
+    updated_at: '2026-11-03'
+  - id: product-backlog-item-inclusion
+    status: supported
+    claim: Product Backlog Items are included in the client's assigned-work query, overview distribution and type filter under the modeled response.
+    reason: The mock rejects queries omitting Product Backlog Item; the actual client returned two PBIs and UI-model checks distinguished open from completed PBIs.
+    verification: On 2026-11-03 the HTTP runner passed 35 checks with one unrelated DPAPI skip; 12 project filters and 18 collection assertions passed. Live tenant data not verified.
+    source: AzureDevOpsClient.cs; tests/Program.cs; postman/mocks/azure-devops/default.js; DashboardViewModel.cs.
+    updated_at: '2026-11-03'
+  - id: team-board-scope-and-moves
+    status: supported
+    claim: In modeled cases the board client scopes cards to team areas and backlog iteration, reads configured board fields, and confirms moves using a revision-guarded JSON Patch. It does not automatically retry a failed or uncertain write.
+    reason: The actual client and WPF control executed HTTP reads and writes against a stateful synthetic server. Counts and post-write reads distinguished rejection from a write applied before a lost response.
+    verification: On 2026-11-03, 79 client/model checks passed with one unrelated DPAPI skip. Nine WPF HTTP checks and 18 board collection assertions passed. The simulation counted one PATCH for each failure scenario. Lost/unconfirmed responses left an applied write visible to a subsequent read; the UI required reload before another write. No calls modified live Helsedir data.
+    source: BoardClient.cs; BoardView.xaml.cs; tests/BoardChecks.cs; BoardUiChecks.cs; postman/mocks/azure-devops/default.js; postman/specs/board.yaml; TESTING.md.
+    updated_at: '2026-11-03'
+  - id: board-live-compatibility
+    status: unknown
+    claim: Helsedir's actual board mappings, team scope and work item rules permit these reads and user-initiated moves.
+    reason: Public REST contracts were checked, but no live token or tenant workflow was exercised. A modeled success cannot establish tenant permissions or workflow compatibility.
+    verification: Pending user connection and user-initiated move using Work Items Read and Write. Read-only tokens are expected to permit board viewing; write denials are surfaced without optimistic movement.
+    source: README.md; ConnectionWindow.xaml; official Microsoft REST links in TESTING.md.
+    updated_at: '2026-11-03'
+fingerprints:
+  - id: board-move-verification
+    date: '2026-11-03'
+    commit: Uncommitted local Kanban implementation. Actual client HTTP runner passed 79 checks with one DPAPI skip. Nine WPF HTTP checks and 18 board collection assertions passed. No live writes.
+    cli: Postman 1.83.1; .NET SDK 10.0.401.
+  - id: discussion-alerts-verification
+    date: '2026-11-03'
+    commit: Uncommitted local discussion and notification implementation; client tested against synthetic comments and snapshot comparisons. Live tenant not checked.
+    cli: Postman 1.83.1; .NET SDK 10.0.401.
+  - id: product-backlog-items-verification
+    date: '2026-11-03'
+    commit: Uncommitted local implementation with Product Backlog Item support.
+    cli: Postman 1.83.1; .NET SDK 10.0.401.
+  - id: initial-local-verification
+    date: '2026-11-02'
+    commit: No Git repository existed; initial uncommitted local implementation.
+    cli: Postman 1.83.1; .NET SDK 10.0.401.

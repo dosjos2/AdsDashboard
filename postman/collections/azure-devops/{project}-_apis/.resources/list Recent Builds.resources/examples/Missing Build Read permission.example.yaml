@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/:project/_apis/build/builds?api-version=7.1&minTime=1982-08-26T09:52:38.767Z&queryOrder=queueTimeDescending&$top=100&continuationToken=string"
+  method: GET
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+  queryParams:
+    api-version: "7.1"
+    minTime: 1982-08-26T09:52:38.767Z
+    queryOrder: queueTimeDescending
+    $top: "100"
+    continuationToken: string
+  pathVariables:
+    - key: project
+      value: string
+      disabled: false
+      description: "(Required) "
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: text/plain
+  body:
+    type: text
+    content: ""
+order: 2000

@@ -1,0 +1,3 @@
+$kind: collection
+name: "{project}/_apis"
+order: 2000

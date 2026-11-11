@@ -1,0 +1,12 @@
+$kind: http-request
+name: "list Personal Pull Requests"
+order: 6000
+method: GET
+url: "{{baseUrl}}/{{project}}/_apis/git/pullrequests?api-version=7.1&searchCriteria.creatorId={{myId}}&searchCriteria.status=active&$top=100&$skip=0"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: application/json}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('PRs have creator and reviewers', () => pm.response.json().value.forEach(p => {pm.expect(p.createdBy.id).to.equal(pm.collectionVariables.get('myId')); pm.expect(p.reviewers).to.be.an('array');}));"

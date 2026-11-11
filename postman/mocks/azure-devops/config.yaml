@@ -1,0 +1,10 @@
+version: 1
+name: azure-devops
+description: Local read-only Azure DevOps 7.1 fixtures based on the Microsoft REST contract. Synthetic identities and projects only.
+origin:
+  - dev.azure.com
+  - vssps.dev.azure.com
+interceptRequests: true
+scenarios:
+  - name: default
+    path: default.js

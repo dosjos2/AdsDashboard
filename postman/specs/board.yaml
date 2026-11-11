@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: DevOps Pulse team boards
+  version: 1.0.0
+  description: Read configured team boards and move individual work items with optimistic concurrency. Work Items Read for reads; Read and Write for moves. No rule bypass, notification suppression, or automatic PATCH retry.
+servers:
+  - url: https://dev.azure.com/helsedir
+security:
+  - pat: []
+paths:
+  /_apis/projects/{project}/teams:
+    parameters:
+      - {$ref: '#/components/parameters/project'}
+    get:
+      operationId: listProjectTeams
+      parameters:
+        - {$ref: '#/components/parameters/version'}
+        - {name: '$top', in: query, schema: {type: integer, default: 100}}
+        - {name: '$skip', in: query, schema: {type: integer, default: 0}}
+      responses:
+        '200': {description: Team envelope, content: {application/json: {schema: {$ref: '#/components/schemas/Envelope'}}}}
+  /{project}/{team}/_apis/work/boards:
+    parameters:
+      - {$ref: '#/components/parameters/project'}
+      - {$ref: '#/components/parameters/team'}
+    get:
+      operationId: listTeamBoards
+      parameters:
+        - {$ref: '#/components/parameters/version'}
+      responses:
+        '200': {description: Board references, content: {application/json: {schema: {$ref: '#/components/schemas/Envelope'}}}}
+  /{project}/{team}/_apis/work/boards/{board}:
+    parameters:
+      - {$ref: '#/components/parameters/project'}
+      - {$ref: '#/components/parameters/team'}
+      - {name: board, in: path, required: true, schema: {type: string}}
+    get:
+      operationId: readBoardConfiguration
+      parameters:
+        - {$ref: '#/components/parameters/version'}
+      responses:
+        '200':
+          description: Columns with stateMappings, isSplit, itemLimit; fields.columnField/doneField/rowField.referenceName; rows. These references control read and move behavior.
+          content: {application/json: {schema: {type: object, additionalProperties: true}}}
+  /{project}/{team}/_apis/work/teamsettings/teamfieldvalues:
+    parameters:
+      - {$ref: '#/components/parameters/project'}
+      - {$ref: '#/components/parameters/team'}
+    get:
+      operationId: readTeamAreas
+      parameters:
+        - {$ref: '#/components/parameters/version'}
+      responses:
+        '200': {description: Team field reference and values with includeChildren, content: {application/json: {schema: {type: object, additionalProperties: true}}}}
+  /{project}/{team}/_apis/work/teamsettings:
+    parameters:
+      - {$ref: '#/components/parameters/project'}
+      - {$ref: '#/components/parameters/team'}
+    get:
+      operationId: readBacklogIteration
+      parameters:
+        - {$ref: '#/components/parameters/version'}
+      responses:
+        '200': {description: Team backlogIteration.path used to scope the board, content: {application/json: {schema: {type: object, additionalProperties: true}}}}
+  /{project}/_apis/wit/workitems/{id}:
+    parameters:
+      - {$ref: '#/components/parameters/project'}
+      - {name: id, in: path, required: true, schema: {type: integer}}
+    patch:
+      operationId: moveBoardCard
+      description: One move; JSON Patch tests /rev then updates System.State and the board-specific column and done fields. User initiates the write by dragging or selecting a target column. A failed/uncertain result requires reload, not an automatic retry.
+      parameters:
+        - {$ref: '#/components/parameters/version'}
+      requestBody:
+        required: true
+        content:
+          application/json-patch+json:
+            schema:
+              type: array
+              items:
+                type: object
+                required: [op, path, value]
+                properties:
+                  op: {type: string, enum: [test, add]}
+                  path: {type: string}
+                  value: {}
+      responses:
+        '200': {description: 'Confirmed item with id, rev and fields', content: {application/json: {schema: {type: object, additionalProperties: true}}}}
+        '400': {description: 'Invalid workflow transition, revision mismatch or required field rule'}
+        '403': {description: Missing Work Items Read and Write scope or edit permission}
+        '409': {description: Concurrent change}
+        '412': {description: Revision test failed}
+        '502': {description: 'Gateway failure; move may have been applied. Reload before any retry.'}
+        '503': {description: 'Server failure; outcome may be uncertain. No automatic PATCH retry.'}
+components:
+  securitySchemes:
+    pat: {type: http, scheme: basic}
+  parameters:
+    project: {name: project, in: path, required: true, schema: {type: string}}
+    team: {name: team, in: path, required: true, schema: {type: string}}
+    version: {name: api-version, in: query, required: true, schema: {type: string, default: '7.1'}}
+  schemas:
+    Envelope:
+      type: object
+      required: [value]
+      properties:
+        value: {type: array, items: {type: object, additionalProperties: true}}

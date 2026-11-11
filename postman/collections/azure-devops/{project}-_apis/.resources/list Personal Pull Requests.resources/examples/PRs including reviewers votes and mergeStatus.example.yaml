@@ -1,0 +1,47 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/:project/_apis/git/pullrequests?api-version=7.1&searchCriteria.creatorId=a199d2d4-2e44-6a97-f2cd-5de6796d8d7c&searchCriteria.reviewerId=a199d2d4-2e44-6a97-f2cd-5de6796d8d7c&searchCriteria.status=completed&searchCriteria.minTime=1982-08-26T09:52:38.767Z&searchCriteria.queryTimeRangeType=created&$skip=7287&$top=100"
+  method: GET
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+    - key: Accept
+      value: application/json
+  queryParams:
+    api-version: "7.1"
+    searchCriteria.creatorId: a199d2d4-2e44-6a97-f2cd-5de6796d8d7c
+    searchCriteria.reviewerId: a199d2d4-2e44-6a97-f2cd-5de6796d8d7c
+    searchCriteria.status: completed
+    searchCriteria.minTime: 1982-08-26T09:52:38.767Z
+    searchCriteria.queryTimeRangeType: created
+    $skip: "7287"
+    $top: "100"
+  pathVariables:
+    - key: project
+      value: string
+      disabled: false
+      description: "(Required) "
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "value": [
+          {
+            "key_0": "string"
+          },
+          {
+            "key_0": 1939
+          }
+        ],
+        "count": 5632
+      }
+order: 1000

@@ -1,0 +1,12 @@
+$kind: http-request
+name: "read Backlog Iteration"
+order: 5000
+method: GET
+url: "{{baseUrl}}/Alpha/team-main/_apis/work/teamsettings?api-version=7.1"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: 'application/json'}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Backlog iteration',()=>pm.expect(pm.response.json().backlogIteration.path).to.equal('Alpha\\\\Product'));"

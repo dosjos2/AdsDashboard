@@ -1,0 +1,15 @@
+$kind: http-request
+name: "move Board Card"
+order: 6000
+method: PATCH
+url: "{{baseUrl}}/Alpha/_apis/wit/workitems/501?api-version=7.1"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: 'application/json-patch+json'}
+body:
+  type: json
+  content: "[{\"op\":\"test\",\"path\":\"/rev\",\"value\":1},{\"op\":\"add\",\"path\":\"/fields/System.State\",\"value\":\"Committed\"},{\"op\":\"add\",\"path\":\"/fields/WEF_Team_Kanban.Column\",\"value\":\"In progress\"},{\"op\":\"add\",\"path\":\"/fields/WEF_Team_Kanban.Column.Done\",\"value\":false}]"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Move is confirmed',()=>{pm.expect(pm.response.json().rev).to.equal(2);pm.expect(pm.response.json().fields['WEF_Team_Kanban.Column']).to.equal('In progress');});"

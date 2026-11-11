@@ -1,0 +1,12 @@
+$kind: http-request
+name: "list Projects"
+order: 3000
+method: GET
+url: "{{baseUrl}}/_apis/projects?api-version=7.1&$top=100"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: application/json}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Projects are an array', () => pm.expect(pm.response.json().value).to.be.an('array'));\nif(pm.response.json().value[0]) pm.collectionVariables.set('project', pm.response.json().value[0].id);"

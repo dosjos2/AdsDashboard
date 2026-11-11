@@ -1,0 +1,21 @@
+bin/
+obj/
+dist/
+.buildprofile/
+.vs/
+*.user
+*.log
+*.ndjson
+postman/.dependencies/
+
+# Local configuration, credentials and private keys (all directories).
+appsettings*.json
+appsettings*.json.*
+.env
+.env.*
+credential.dat
+*.pfx
+*.p12
+*.key
+.aws/
+.codex/

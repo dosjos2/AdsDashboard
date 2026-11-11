@@ -1,0 +1,9 @@
+$kind: http-request
+name: List discussion
+order: 9000
+method: GET
+url: "{{baseUrl}}/{{project}}/_apis/wit/workItems/1/comments?api-version=7.1-preview.4&$top=100&$expand=renderedText&includeDeleted=false&order=asc"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Discussion response has comments', () => pm.expect(pm.response.json().comments).to.be.an('array'));"

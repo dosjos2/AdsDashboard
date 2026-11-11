@@ -1,0 +1,25 @@
+$kind: http-example
+request:
+  url: "{{_apis-identities-Url}}/_apis/identities?api-version=7.1&searchFilter=General&filterValue=string&queryMembership=None"
+  method: GET
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+  queryParams:
+    api-version: "7.1"
+    searchFilter: General
+    filterValue: string
+    queryMembership: None
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 401
+  statusText: Unauthorized
+  headers:
+    Content-Type: text/plain
+  body:
+    type: text
+    content: ""
+order: 2000

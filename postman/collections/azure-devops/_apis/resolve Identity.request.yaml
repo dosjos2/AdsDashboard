@@ -1,0 +1,12 @@
+$kind: http-request
+name: "resolve Identity"
+order: 2000
+method: GET
+url: "{{identityUrl}}/_apis/identities?api-version=7.1&searchFilter=General&filterValue={{email}}&queryMembership=None"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: application/json}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Identity can be resolved', () => pm.expect(pm.response.json().value.length).to.be.above(0));\nif(pm.response.json().value[0]) pm.collectionVariables.set('myId', pm.response.json().value[0].id);"

@@ -1,0 +1,15 @@
+$kind: http-request
+name: "query Assigned Work"
+order: 4000
+method: POST
+url: "{{baseUrl}}/_apis/wit/wiql?api-version=7.1"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: application/json}
+body:
+  type: json
+  content: "{\"query\":\"SELECT [System.Id] FROM WorkItems WHERE [System.AssignedTo] = '{{email}}' AND [System.WorkItemType] IN ('Task', 'Feature', 'Bug', 'Product Backlog Item') ORDER BY [System.ChangedDate] DESC\"}"
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('WIQL returns references', () => pm.expect(pm.response.json().workItems).to.be.an('array'));\npm.collectionVariables.set('workIds', JSON.stringify(pm.response.json().workItems.slice(0, 2).map(w => w.id)));"

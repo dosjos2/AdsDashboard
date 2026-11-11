@@ -1,0 +1,12 @@
+$kind: http-request
+name: "read Board Configuration"
+order: 3000
+method: GET
+url: "{{baseUrl}}/Alpha/team-main/_apis/work/boards/board-a?api-version=7.1"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: 'application/json'}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Board columns and specific field',()=>{pm.expect(pm.response.json().columns).to.have.length(4);pm.expect(pm.response.json().fields.columnField.referenceName).to.equal('WEF_Team_Kanban.Column');});"

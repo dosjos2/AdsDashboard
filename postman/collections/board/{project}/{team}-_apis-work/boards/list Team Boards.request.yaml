@@ -1,0 +1,12 @@
+$kind: http-request
+name: "list Team Boards"
+order: 2000
+method: GET
+url: "{{baseUrl}}/Alpha/team-main/_apis/work/boards?api-version=7.1"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: 'application/json'}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Board references',()=>pm.expect(pm.response.json().value[0].id).to.equal('board-a'));"

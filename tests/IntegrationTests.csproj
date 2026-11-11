@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+ <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+ <ItemGroup><Compile Include="../Models.cs" Link="Models.cs"/><Compile Include="../AzureDevOpsClient.cs" Link="AzureDevOpsClient.cs"/><Compile Include="../DemoData.cs" Link="DemoData.cs"/><Compile Include="../DashboardViewModel.cs" Link="DashboardViewModel.cs"/><Compile Include="../SettingsStore.cs" Link="SettingsStore.cs"/></ItemGroup>
+ <ItemGroup><Compile Include="../WorkItemText.cs" Link="WorkItemText.cs"/></ItemGroup>
+ <ItemGroup><Compile Include="../ActivityFeed.cs" Link="ActivityFeed.cs"/></ItemGroup>
+ <ItemGroup><Compile Include="../BoardModels.cs" Link="BoardModels.cs"/><Compile Include="../BoardClient.cs" Link="BoardClient.cs"/></ItemGroup>
+</Project>

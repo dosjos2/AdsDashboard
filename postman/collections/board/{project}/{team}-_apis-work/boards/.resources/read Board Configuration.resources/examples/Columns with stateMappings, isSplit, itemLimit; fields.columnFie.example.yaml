@@ -1,0 +1,41 @@
+$kind: http-example
+name: Columns with stateMappings, isSplit, itemLimit; fields.columnField/doneField/rowField.referenceName; rows. These references control read and move behavior.
+request:
+  url: "{{baseUrl}}/:project/:team/_apis/work/boards/:board?api-version=7.1"
+  method: GET
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+    - key: Accept
+      value: application/json
+  queryParams:
+    api-version: "7.1"
+  pathVariables:
+    - key: project
+      value: string
+      disabled: false
+      description: "(Required) "
+    - key: team
+      value: string
+      disabled: false
+      description: "(Required) "
+    - key: board
+      value: string
+      disabled: false
+      description: "(Required) "
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "key_0": "string"
+      }
+order: 1000

@@ -1,0 +1,46 @@
+$kind: http-example
+name: Builds queued in the last seven days; client keeps latest build per definition
+request:
+  url: "{{baseUrl}}/:project/_apis/build/builds?api-version=7.1&minTime=1982-08-26T09:52:38.767Z&queryOrder=queueTimeDescending&$top=100&continuationToken=string"
+  method: GET
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+    - key: Accept
+      value: application/json
+  queryParams:
+    api-version: "7.1"
+    minTime: 1982-08-26T09:52:38.767Z
+    queryOrder: queueTimeDescending
+    $top: "100"
+    continuationToken: string
+  pathVariables:
+    - key: project
+      value: string
+      disabled: false
+      description: "(Required) "
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    x-ms-continuationtoken: string
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "value": [
+          {
+            "key_0": "string"
+          },
+          {
+            "key_0": 1939
+          }
+        ],
+        "count": 5632
+      }
+order: 1000

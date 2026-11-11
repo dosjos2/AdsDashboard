@@ -1,0 +1,36 @@
+<Window x:Class="DevOpsPulse.WorkItemWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="880" Height="780" MinWidth="620" MinHeight="480" WindowStartupLocation="CenterOwner" Style="{StaticResource {x:Type Window}}">
+ <Window.Resources>
+  <Style x:Key="DetailValue" TargetType="TextBox"><Setter Property="IsReadOnly" Value="True"/><Setter Property="TextWrapping" Value="Wrap"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Background" Value="Transparent"/><Setter Property="Padding" Value="0"/><Setter Property="Margin" Value="0,7,0,0"/><Setter Property="Foreground" Value="{StaticResource Ink}"/></Style>
+ </Window.Resources>
+ <Grid Margin="28"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+  <StackPanel Margin="0,0,0,22">
+   <StackPanel Orientation="Horizontal"><TextBlock Text="{Binding Type}" Foreground="{Binding Color}" FontWeight="SemiBold"/><TextBlock Text="{Binding Id, StringFormat='  ·  #{0}'}" Foreground="{StaticResource Muted}"/><Border Background="{Binding StateBackground}" CornerRadius="5" Padding="9,3" Margin="15,-3,0,0"><TextBlock Text="{Binding State}" Foreground="{Binding StateColor}" FontSize="11"/></Border></StackPanel>
+   <TextBox Text="{Binding Title, Mode=OneWay}" Style="{StaticResource DetailValue}" FontSize="24" FontWeight="SemiBold" Margin="0,14,0,0"/>
+   <TextBlock x:Name="SnapshotLabel" Foreground="{StaticResource Muted}" FontSize="11" TextWrapping="Wrap" Margin="0,12,0,0"/>
+  </StackPanel>
+  <TabControl Grid.Row="1" Background="Transparent" BorderThickness="0" Padding="0,14,0,0"><TabItem Header="Detaljer" Padding="18,9"><ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><StackPanel Margin="0,0,10,0">
+   <Border Style="{StaticResource Card}" Margin="0,0,0,16"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <StackPanel Margin="0,0,20,0"><TextBlock Text="PROSJEKT" Style="{StaticResource MutedText}"/><TextBox Text="{Binding Project, Mode=OneWay}" Style="{StaticResource DetailValue}"/><TextBlock Text="TILDELT" Style="{StaticResource MutedText}" Margin="0,17,0,0"/><TextBox x:Name="AssignedValue" Style="{StaticResource DetailValue}"/><TextBlock Text="PRIORITET / ALVORLIGHET" Style="{StaticResource MutedText}" Margin="0,17,0,0"/><TextBox x:Name="PriorityValue" Style="{StaticResource DetailValue}"/></StackPanel>
+    <StackPanel Grid.Column="1"><TextBlock Text="ITERASJON" Style="{StaticResource MutedText}"/><TextBox Text="{Binding Iteration, Mode=OneWay}" Style="{StaticResource DetailValue}"/><TextBlock Text="OMRÅDE" Style="{StaticResource MutedText}" Margin="0,17,0,0"/><TextBox x:Name="AreaValue" Style="{StaticResource DetailValue}"/><TextBlock Text="SIST ENDRET" Style="{StaticResource MutedText}" Margin="0,17,0,0"/><TextBox Text="{Binding Changed, Mode=OneWay, StringFormat='{}{0:dd.MM.yyyy HH:mm}'}" Style="{StaticResource DetailValue}"/></StackPanel>
+   </Grid></Border>
+   <Border Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel><TextBlock Text="Beskrivelse" Style="{StaticResource Heading}"/><TextBox x:Name="DescriptionValue" Style="{StaticResource DetailValue}" Margin="0,12,0,0"/></StackPanel></Border>
+   <Border x:Name="ReproSection" Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel><TextBlock Text="Steg for å gjenskape feilen" Style="{StaticResource Heading}"/><TextBox Text="{Binding ReproSteps, Mode=OneWay}" Style="{StaticResource DetailValue}" Margin="0,12,0,0"/></StackPanel></Border>
+   <Border x:Name="AcceptanceSection" Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel><TextBlock Text="Akseptansekriterier" Style="{StaticResource Heading}"/><TextBox Text="{Binding AcceptanceCriteria, Mode=OneWay}" Style="{StaticResource DetailValue}" Margin="0,12,0,0"/></StackPanel></Border>
+   <Border x:Name="TagsSection" Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel><TextBlock Text="Etiketter" Style="{StaticResource Heading}"/><TextBox Text="{Binding Tags, Mode=OneWay}" Style="{StaticResource DetailValue}"/></StackPanel></Border>
+  </StackPanel></ScrollViewer></TabItem><TabItem x:Name="DiscussionTab" Header="Diskusjon" Padding="18,9"><ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">   <Border x:Name="DiscussionSection" Style="{StaticResource Card}" Margin="0,0,0,16"><StackPanel>
+    <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><TextBlock Text="Diskusjon" Style="{StaticResource Heading}" VerticalAlignment="Center"/><Button x:Name="ReloadDiscussionButton" Grid.Column="1" Content="↻ Oppdater" Click="ReloadDiscussionClick" Padding="10,6" FontSize="11"/></Grid>
+    <TextBlock x:Name="DiscussionStatus" Text="Henter diskusjon…" Style="{StaticResource MutedText}" TextWrapping="Wrap" Margin="0,10,0,0"/>
+    <ItemsControl x:Name="DiscussionItems"><ItemsControl.ItemTemplate><DataTemplate><Border BorderBrush="#E8EDF4" BorderThickness="0,1,0,0" Padding="0,15,0,5" Margin="0,14,0,0"><StackPanel><TextBlock Text="{Binding Author}" FontWeight="SemiBold"/><TextBlock Text="{Binding Metadata}" Style="{StaticResource MutedText}" FontSize="10" Margin="0,4,0,0"/><TextBox Text="{Binding Text, Mode=OneWay}" Style="{StaticResource DetailValue}" Margin="0,10,0,0"/></StackPanel></Border></DataTemplate></ItemsControl.ItemTemplate></ItemsControl>
+   </StackPanel></Border>
+</ScrollViewer></TabItem></TabControl>
+  <StackPanel Grid.Row="2" Margin="0,18,0,0">
+   <TextBlock x:Name="BrowserError" Visibility="Collapsed" Foreground="#AB4558" TextWrapping="Wrap" Margin="0,0,0,10"/>
+   <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+    <TextBlock Text="Hentede oppgavedata" Foreground="{StaticResource Muted}" FontSize="11" VerticalAlignment="Center"/>
+    <Button x:Name="OpenWebButton" Grid.Column="1" Content="Åpne i Azure DevOps ↗" Click="OpenWebClick" Margin="12,0" ToolTipService.ShowOnDisabled="True"/>
+    <Button Grid.Column="2" Content="Lukk" Click="CloseClick" Style="{StaticResource Primary}" Padding="24,10"/>
+   </Grid>
+  </StackPanel>
+ </Grid>
+</Window>

@@ -1,0 +1,42 @@
+$kind: http-example
+request:
+  url: "{{_apis-identities-Url}}/_apis/identities?api-version=7.1&searchFilter=General&filterValue=string&queryMembership=None"
+  method: GET
+  headers:
+    - key: Authorization
+      value: Basic <credentials>
+      description: "Added as a part of security scheme: basic"
+    - key: Accept
+      value: application/json
+  queryParams:
+    api-version: "7.1"
+    searchFilter: General
+    filterValue: string
+    queryMembership: None
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "value": [
+          {
+            "key_0": 2046,
+            "key_1": 5600,
+            "key_2": true
+          },
+          {
+            "key_0": false,
+            "key_1": 9307.798594236374,
+            "key_2": 1872.2805939614773
+          }
+        ],
+        "count": 2167
+      }
+order: 1000

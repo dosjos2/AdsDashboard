@@ -1,0 +1,12 @@
+$kind: http-request
+name: "list Project Teams"
+order: 1000
+method: GET
+url: "{{baseUrl}}/_apis/projects/project-a/teams?api-version=7.1&$top=100&$skip=0"
+headers:
+  - {key: Accept, value: application/json}
+  - {key: Content-Type, value: 'application/json'}
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: "pm.test('Teams envelope',()=>pm.expect(pm.response.json().value).to.be.an('array'));"

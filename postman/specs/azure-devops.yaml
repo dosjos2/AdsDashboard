@@ -1,0 +1,153 @@
+openapi: 3.0.3
+info:
+  title: DevOps Pulse - Azure DevOps read contract
+  version: 1.0.0
+  description: Client subset of Azure DevOps REST 7.1. Identity requests use vssps.dev.azure.com. POST requests only query data.
+servers:
+  - url: https://dev.azure.com/helsedir
+security:
+  - pat: []
+paths:
+  /_apis/identities:
+    servers:
+      - url: https://vssps.dev.azure.com/helsedir
+    get:
+      operationId: resolveIdentity
+      parameters:
+        - {name: api-version, in: query, required: true, schema: {type: string, default: '7.1'}}
+        - {name: searchFilter, in: query, schema: {type: string, default: General}}
+        - {name: filterValue, in: query, required: true, schema: {type: string}}
+        - {name: queryMembership, in: query, schema: {type: string, default: None}}
+      responses:
+        '200': {description: Identity envelope, content: {application/json: {schema: {$ref: '#/components/schemas/Envelope'}}}}
+        '401': {description: Expired or invalid token}
+        '403': {description: Missing Identity Read permission}
+  /_apis/projects:
+    get:
+      operationId: listProjects
+      parameters:
+        - {name: api-version, in: query, required: true, schema: {type: string, default: '7.1'}}
+        - {name: continuationToken, in: query, schema: {type: string}}
+        - {name: '$top', in: query, schema: {type: integer, default: 100}}
+      responses:
+        '200':
+          description: Accessible projects
+          headers:
+            x-ms-continuationtoken: {description: Next page token, schema: {type: string}}
+          content: {application/json: {schema: {$ref: '#/components/schemas/Envelope'}}}
+        '403': {description: Missing Project and Team Read permission}
+  /_apis/wit/wiql:
+    post:
+      operationId: queryAssignedWork
+      parameters:
+        - {name: api-version, in: query, required: true, schema: {type: string, default: '7.1'}}
+        - {name: timePrecision, in: query, schema: {type: boolean, description: Preserve timestamp precision for incremental notification scans}}
+        - {name: '$top', in: query, schema: {type: integer, description: Maximum IDs per query; scans use pages of 500 and an ID cursor}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [query]
+              properties:
+                query: {type: string}
+      responses:
+        '200':
+          description: Assigned Task, Feature, Bug and Product Backlog Item IDs
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [workItems]
+                properties:
+                  workItems: {type: array, items: {type: object, required: [id], properties: {id: {type: integer}}}}
+        '400': {description: Invalid WIQL or more than 20000 matches}
+  /_apis/wit/workitemsbatch:
+    post:
+      operationId: readWorkItemDetails
+      parameters:
+        - {name: api-version, in: query, required: true, schema: {type: string, default: '7.1'}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ids]
+              properties:
+                ids: {type: array, maxItems: 200, items: {type: integer}}
+                errorPolicy: {type: string, enum: [Fail, Omit]}
+                asOf: {type: string, format: date-time, description: Snapshot used when comparing mention changes}
+      responses:
+        '200': {description: 'Work items with fields including System.AssignedTo and System.State. Native detail windows also use optional System.Description, System.AreaPath, System.Tags, Microsoft.VSTS.TCM.ReproSteps and Microsoft.VSTS.Common.AcceptanceCriteria. HTML fields are displayed as plain text.', content: {application/json: {schema: {$ref: '#/components/schemas/Envelope'}}}}
+  /{project}/_apis/wit/workItems/{workItemId}/comments:
+    parameters:
+      - {name: project, in: path, required: true, schema: {type: string}}
+      - {name: workItemId, in: path, required: true, schema: {type: integer}}
+    get:
+      operationId: listWorkItemComments
+      parameters:
+        - {name: api-version, in: query, required: true, schema: {type: string, default: '7.1-preview.4'}}
+        - {name: '$top', in: query, schema: {type: integer, default: 100}}
+        - {name: '$expand', in: query, schema: {type: string, default: renderedText}}
+        - {name: continuationToken, in: query, schema: {type: string}}
+        - {name: includeDeleted, in: query, schema: {type: boolean, default: false}}
+        - {name: order, in: query, schema: {type: string, enum: [asc, desc], default: asc}}
+      responses:
+        '200':
+          description: Paginated discussion. Comments include id, text, renderedText, createdBy, createdDate, modifiedDate and optional mentions.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [comments]
+                properties:
+                  comments: {type: array, items: {type: object, additionalProperties: true}}
+                  continuationToken: {type: string, nullable: true}
+        '403': {description: Missing work item read access}
+  /{project}/_apis/git/pullrequests:
+    parameters:
+      - {name: project, in: path, required: true, schema: {type: string}}
+    get:
+      operationId: listPersonalPullRequests
+      parameters:
+        - {name: api-version, in: query, required: true, schema: {type: string, default: '7.1'}}
+        - {name: searchCriteria.creatorId, in: query, schema: {type: string, format: uuid}}
+        - {name: searchCriteria.reviewerId, in: query, schema: {type: string, format: uuid}}
+        - {name: searchCriteria.status, in: query, schema: {type: string, enum: [active, completed, abandoned, all]}}
+        - {name: searchCriteria.minTime, in: query, schema: {type: string, format: date-time}}
+        - {name: searchCriteria.queryTimeRangeType, in: query, schema: {type: string, enum: [created, closed]}}
+        - {name: '$skip', in: query, schema: {type: integer}}
+        - {name: '$top', in: query, schema: {type: integer, default: 100}}
+      responses:
+        '200': {description: PRs including reviewers votes and mergeStatus, content: {application/json: {schema: {$ref: '#/components/schemas/Envelope'}}}}
+        '403': {description: Missing Code Read permission or project access}
+  /{project}/_apis/build/builds:
+    parameters:
+      - {name: project, in: path, required: true, schema: {type: string}}
+    get:
+      operationId: listRecentBuilds
+      parameters:
+        - {name: api-version, in: query, required: true, schema: {type: string, default: '7.1'}}
+        - {name: minTime, in: query, schema: {type: string, format: date-time}}
+        - {name: queryOrder, in: query, schema: {type: string, default: queueTimeDescending}}
+        - {name: '$top', in: query, schema: {type: integer, default: 100}}
+        - {name: continuationToken, in: query, schema: {type: string}}
+      responses:
+        '200':
+          description: Builds queued in the last seven days; client keeps latest build per definition
+          headers:
+            x-ms-continuationtoken: {schema: {type: string}}
+          content: {application/json: {schema: {$ref: '#/components/schemas/Envelope'}}}
+        '403': {description: Missing Build Read permission}
+components:
+  securitySchemes:
+    pat: {type: http, scheme: basic, description: Empty username and personal access token as password}
+  schemas:
+    Envelope:
+      type: object
+      required: [value]
+      properties:
+        count: {type: integer}
+        value: {type: array, items: {type: object, additionalProperties: true}}
